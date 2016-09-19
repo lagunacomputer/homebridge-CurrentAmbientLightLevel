@@ -8,7 +8,6 @@ This is a feeble attempt at a work in progress.  Most of the code is stolen from
 {
 
   "bridge": {
-  
     "name": "HomeBridge",
     
     "username": "CC:22:3D:E3:CE:30",
@@ -17,13 +16,11 @@ This is a feeble attempt at a work in progress.  Most of the code is stolen from
     
     "pin": "031-45-154"
     
-    
   },
 
   "description": "",
 
   "accessories": [
-  
     {
     
       "accessory": "PhotoCell",
@@ -33,7 +30,5 @@ This is a feeble attempt at a work in progress.  Most of the code is stolen from
       }
       
   ],
-
   "platforms": []
-  
 }
