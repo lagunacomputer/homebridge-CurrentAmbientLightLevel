@@ -10,11 +10,11 @@ var temperature = 0;
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-httptemperaturehumidity", "HttpTemphum", HttpTemphum);
+    homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", PhotoCell);
 }
 
 
-function HttpTemphum(log, config) {
+function PhotoCell(log, config) {
     this.log = log;
 
     // url info
@@ -22,13 +22,13 @@ function HttpTemphum(log, config) {
     this.http_method = config["http_method"] || "GET";
     this.sendimmediately = config["sendimmediately"] || "";
     this.name = config["name"];
-    this.manufacturer = config["manufacturer"] || "Luca Manufacturer";
-    this.model = config["model"] || "Luca Model";
-    this.serial = config["serial"] || "Luca Serial";
+    this.manufacturer = config["manufacturer"] || "Galen Wollenberg LagunaBeachComputer.com";
+    this.model = config["model"] || "Light Sensor";
+    this.serial = config["serial"] || "v1";
     this.humidity = config["humidity"];
 }
 
-HttpTemphum.prototype = {
+PhotoCell.prototype = {
 
     httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
         request({
