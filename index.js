@@ -1,62 +1,104 @@
-
-var ds18b20 = require('ds18b20');
 var Service, Characteristic;
+var request = require('sync-request');
+
+var temperatureService;
+var humidityService;
+var url 
+var humidity = 0;
+var temperature = 0;
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", LightSensorAccessory);
 }
+function HttpTemphum(log, config) {
+    this.log = log;
 
-function LightSensorAccessory(log, config) {
-  this.log = log;
-  this.name = config["name"];
-  this.device = config["device"];
-
-  this.service = new Service.LightSensor(this.name);
-
-  this.service
-    .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-    .setProps({ minValue: 0, maxValue: 1024 })
-    .on('get', this.getState.bind(this));
+    // url info
+    this.url = config["url"];
+    this.http_method = config["http_method"] || "GET";
+    this.sendimmediately = config["sendimmediately"] || "";
+    this.name = config["name"];
+    this.manufacturer = config["manufacturer"] || "LagunaBeachComputer.com";
+    this.model = config["model"] || "PhotoCell";
+    this.serial = config["serial"] || "v1";
+    this.humidity = config["humidity"];
 }
 
-// LightSensorAccessory.prototype.getState = function(callback) {
-//  ds18b20.temperature(this.device, function(err,value){
-//    callback(err, value);
-//  });
-// }
+LightSensorAccessory.prototype = {
 
+    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
+        request({
+                    url: url,
+                    body: body,
+                    method: method,
+                    rejectUnauthorized: false
+                },
+                function (error, response, body) {
+                    callback(error, response, body)
+                })
+    },
 
+    getStateHumidity: function(callback){    
+	callback(null, this.humidity);
+    },
 
+    getState: function (callback) {
+        var body;
 
+	var res = request(this.http_method, this.url, {});
+	if(res.statusCode > 400){
+	  this.log('HTTP power function failed');
+	  callback(error);
+	} else {
+	  this.log('HTTP power function succeeded!');
+          var info = JSON.parse(res.body);
 
-LightSensorAccessory.prototype.getState = function(callback) {
-  this.log("Getting current state...");
-  
-  request.get({
-    url: "http://192.168.1.201/?light",
-    qs: { access_token: this.accessToken }
-  }, function(err, response, body) {
-    
-    if (!err && response.statusCode == 200) {
-      var json = JSON.parse(body);
-      var state = json.lightval; // change temp or humidty to lightval in arduino
-      var locked = state == "lock"
-      callback(err, value) // success
+          temperatureService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, info.temperature);
+          if(this.humidity !== false)
+            humidityService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, info.humidity);
+
+          this.log(res.body);
+          this.log(info);
+
+          this.temperature = info.temperature;
+          if(this.humidity !== false)
+            this.humidity = info.humidity;
+
+	  callback(null, this.temperature);
+	}
+    },
+
+    identify: function (callback) {
+        this.log("Identify requested!");
+        callback(); // success
+    },
+
+    getServices: function () {
+        var services = [],
+            informationService = new Service.AccessoryInformation();
+            
+        informationService
+                .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
+                .setCharacteristic(Characteristic.Model, this.model)
+                .setCharacteristic(Characteristic.SerialNumber, this.serial);
+        services.push(informationService);
+
+        temperatureService = new Service.LightSensor(this.name);
+        temperatureService
+                .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                .on('get', this.getState.bind(this));
+        services.push(temperatureService);
+        
+        if(this.humidity !== false){
+          humidityService = new Service.LightSensor(this.name);
+          humidityService
+                  .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                  .on('get', this.getStateHumidity.bind(this));
+          services.push(humidityService);
+        }
+
+        return services;
     }
-    else {
-      this.log("Error getting state (status code %s): %s", response.statusCode, err);
-      callback(err);
-    }
-  }.bind(this));
-}
-
-
-
-
-
-
-LightSensorAccessory.prototype.getServices = function() {
-  return [this.service];
-}
+};
