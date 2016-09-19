@@ -17,7 +17,7 @@ function LightSensorAccessory(log, config) {
 
   this.service
     .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-    .setProps({ minValue: -55, maxValue: 125 })
+    .setProps({ minValue: 0, maxValue: 1024 })
     .on('get', this.getState.bind(this));
 }
 
@@ -51,10 +51,6 @@ LightSensorAccessory.prototype.getState = function(callback) {
     }
   }.bind(this));
 }
-
-
-
-
 
 
 
