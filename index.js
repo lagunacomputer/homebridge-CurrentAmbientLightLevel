@@ -10,7 +10,7 @@ var temperature = 0;
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", LightSensorAccessory);
+  homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", PhotoCell);
 }
 function HttpTemphum(log, config) {
     this.log = log;
@@ -26,7 +26,7 @@ function HttpTemphum(log, config) {
     this.humidity = config["humidity"];
 }
 
-LightSensorAccessory.prototype = {
+PhotoCell.prototype = {
 
     httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
         request({
