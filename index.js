@@ -7,11 +7,13 @@ var url
 var humidity = 0;
 var temperature = 0;
 
-module.exports = function(homebridge) {
-  Service = homebridge.hap.Service;
-  Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", PhotoCell);
+module.exports = function (homebridge) {
+    Service = homebridge.hap.Service;
+    Characteristic = homebridge.hap.Characteristic;
+    homebridge.registerAccessory("homebridge-httptemperaturehumidity", "HttpTemphum", HttpTemphum);
 }
+
+
 function HttpTemphum(log, config) {
     this.log = log;
 
@@ -20,13 +22,13 @@ function HttpTemphum(log, config) {
     this.http_method = config["http_method"] || "GET";
     this.sendimmediately = config["sendimmediately"] || "";
     this.name = config["name"];
-    this.manufacturer = config["manufacturer"] || "LagunaBeachComputer.com";
-    this.model = config["model"] || "PhotoCell";
-    this.serial = config["serial"] || "v1";
+    this.manufacturer = config["manufacturer"] || "Luca Manufacturer";
+    this.model = config["model"] || "Luca Model";
+    this.serial = config["serial"] || "Luca Serial";
     this.humidity = config["humidity"];
 }
 
-PhotoCell.prototype = {
+HttpTemphum.prototype = {
 
     httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
         request({
@@ -55,9 +57,9 @@ PhotoCell.prototype = {
 	  this.log('HTTP power function succeeded!');
           var info = JSON.parse(res.body);
 
-          temperatureService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, info.temperature);
+          temperatureService.setCharacteristic(Characteristic.CurrentTemperature, info.temperature);
           if(this.humidity !== false)
-            humidityService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, info.humidity);
+            humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, info.humidity);
 
           this.log(res.body);
           this.log(info);
@@ -85,16 +87,16 @@ PhotoCell.prototype = {
                 .setCharacteristic(Characteristic.SerialNumber, this.serial);
         services.push(informationService);
 
-        temperatureService = new Service.LightSensor(this.name);
+        temperatureService = new Service.TemperatureSensor(this.name);
         temperatureService
-                .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                .getCharacteristic(Characteristic.CurrentTemperature)
                 .on('get', this.getState.bind(this));
         services.push(temperatureService);
         
         if(this.humidity !== false){
-          humidityService = new Service.LightSensor(this.name);
+          humidityService = new Service.HumiditySensor(this.name);
           humidityService
-                  .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                  .getCharacteristic(Characteristic.CurrentRelativeHumidity)
                   .on('get', this.getStateHumidity.bind(this));
           services.push(humidityService);
         }
