@@ -18,11 +18,15 @@ Once this is complete, basically all sorts of input sensors become available to 
     "description": "",
 
     "accessories": [
-    {
-      "accessory": "PhotoCell",
-      "name": "Light Sensor",
-      }
-    ],
+        "accessories": [
+        {
+            "accessory": "PhotoCell",
+            "name": "Light Sensor",
+            "url": "http://192.168.1.210/light",
+            "sendimmediately": "",
+            "http_method": "GET"
+        }
+    ]
 
     "platforms": []
     }
