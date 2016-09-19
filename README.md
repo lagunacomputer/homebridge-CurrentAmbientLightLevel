@@ -17,7 +17,7 @@ Once this is complete, basically all sorts of input sensors become available to 
 
     "description": "",
 
-    "accessories": [
+
         "accessories": [
         {
             "accessory": "PhotoCell",
