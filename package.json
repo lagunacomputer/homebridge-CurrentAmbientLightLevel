@@ -1,0 +1,33 @@
+{
+  "name": "homebridge-CurrentAmbientLightLevel",
+  "version": "1.0.0",
+  "description": "A HomeBridge plugin for photocell light sensors (CurrentAmbientLightLevel).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lagunacomputer/homebridge-CurrentAmbientLightLevel.git"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "author": "Galen Wollenberg - LagunaBeachComputer.com",
+  "license": "none",
+  "bugs": {
+    "url": "https://github.com/lagunacomputer/homebridge-CurrentAmbientLightLevel/issues"
+  },
+  "homepage": "https://github.com/lagunacomputer/homebridge-CurrentAmbientLightLevel#readme",
+  "dependencies": {
+    "ds18b20": "^0.1.0"
+  }
+}
