@@ -23,9 +23,9 @@ function PhotoCell(log, config) {
     this.http_method = config["http_method"] || "GET";
     this.sendimmediately = config["sendimmediately"] || "";
     this.name = config["name"];
-    this.manufacturer = config["manufacturer"] || "Galen Wollenberg LagunaBeachComputer.com";
-    this.model = config["model"] || "Light Sensor";
-    this.serial = config["serial"] || "v1";
+    this.manufacturer = config["manufacturer"] || "Luca Manufacturer";
+    this.model = config["model"] || "Luca Model";
+    this.serial = config["serial"] || "Luca Serial";
     this.humidity = config["humidity"];
 }
 
