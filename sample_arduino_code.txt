@@ -1,0 +1,218 @@
+
+
+#include <SPI.h>
+#include <Ethernet.h>
+
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED }; //physical mac address
+byte ip[] = { 192, 168, 1, 201 }; // ip in lan
+byte gateway[] = { 192, 168, 1, 1 }; // internet access via router
+byte subnet[] = { 255, 255, 255, 0 }; //subnet mask
+EthernetServer server(80); //server port
+
+String readString; 
+
+
+
+
+
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+/*-----( Declare Constants )-----*/
+#define ONE_WIRE_BUS 2 /*-(Connect to Pin 2 )-*/
+
+/*-----( Declare objects )-----*/
+/* Set up a oneWire instance to communicate with any OneWire device*/
+OneWire ourWire(ONE_WIRE_BUS);
+
+/* Tell Dallas Temperature Library to use oneWire Library */
+DallasTemperature sensors(&ourWire);
+
+/*-----( Declare Variables )-----*/
+
+//////////////////////
+
+
+
+int photocellPin = 1;     // the cell and 10K pulldown are connected to a1
+int photocellReading;     // the analog reading from the analog resistor divider
+
+
+
+void setup(){
+
+  pinMode(5, OUTPUT); //pin selected to control
+  //start Ethernet
+  Ethernet.begin(mac, ip, gateway, gateway, subnet);
+  server.begin();
+  //enable serial data print 
+  Serial.begin(9600); 
+
+
+sensors.begin();
+
+  
+}
+
+void loop(){
+
+
+
+photocellReading = analogRead(photocellPin);  
+ 
+  Serial.print("Analog reading = ");
+  Serial.print(photocellReading);     // the raw analog reading
+ 
+  // We'll have a few threshholds, qualitatively determined
+  if (photocellReading < 10) {
+    Serial.println(" - Dark");
+  } else if (photocellReading < 200) {
+    Serial.println(" - Dim");
+  } else if (photocellReading < 500) {
+    Serial.println(" - Light");
+  } else if (photocellReading < 800) {
+    Serial.println(" - Bright");
+  } else {
+    Serial.println(" - Very bright");
+  }
+          
+
+
+
+
+
+
+
+
+float temperatureIndoor;
+  float temperatureOutdoor;
+  delay(10);
+  // Create a client connection
+  EthernetClient client = server.available();
+  if (client) {
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+
+        //read char by char HTTP request
+        if (readString.length() < 100) {
+
+          //store characters to string 
+          readString += c; 
+          //Serial.print(c);
+        } 
+
+        //if HTTP request has ended
+        if (c == '\n') {
+
+          ///////////////
+       /*   Serial.println(readString); //print to serial monitor for debuging 
+
+          client.println("HTTP/1.1 200 OK"); //send new page
+          client.println("Content-Type: text/html");
+          client.println();
+
+          client.println("<HTML>");
+          client.println("<HEAD>");
+          client.println("<TITLE>Arduino GET test page</TITLE>");
+          client.println("</HEAD>");
+          client.println("<BODY>");
+
+          client.println("<H1>Simple Arduino button</H1>");
+          
+          client.println("<a href=\"/?on\">ON</a>"); 
+          client.println("<a href=\"/?off\">OFF</a>"); 
+          client.println("<a href=\"/?temp\">temp</a>"); 
+
+          client.println("</BODY>");
+          client.println("</HTML>");
+
+          delay(1);
+*/
+
+          client.println("HTTP/1.1 200 OK");
+          client.println("Content-Type: application/json;charset=utf-8");
+          client.println("Server: Arduino");
+          client.println("Connnection: close");
+          client.println();
+          sensors.requestTemperatures(); // Send the command to get temperatures
+          temperatureIndoor = (sensors.getTempCByIndex(0));
+          temperatureOutdoor = (sensors.getTempFByIndex(0));
+ 
+          client.print("{");
+          client.print("\"temperature\":");
+          client.print(temperatureIndoor);
+          client.print(",");
+          client.print("\"humidity\":");
+          client.print(temperatureOutdoor);
+          
+          //client.print("}");
+          //client.println();
+       
+          client.print(",");
+          //client.print("{");
+          client.print("\"lightval\":");
+          client.print(photocellReading);
+          client.print("}");
+          client.println();
+
+
+
+
+          
+
+          //stopping client
+          client.stop();
+
+          ///////////////////// control arduino pin
+          if(readString.indexOf("?on") >0)//checks for on
+          {
+            Serial.println(readString.indexOf("on"));
+            
+            digitalWrite(5, HIGH);    // set pin 5 high
+            Serial.println("Led On");
+
+          }
+          if(readString.indexOf("?off") >0)//checks for off
+          {
+            Serial.println(readString.indexOf("off"));
+            digitalWrite(5, LOW);    // set pin 5 low
+            Serial.println("Led Off");
+          }
+          if(readString.indexOf("?temp") >0)//checks for off
+          {
+            Serial.println(readString.indexOf("temp"));
+
+
+       
+            //digitalWrite(5, LOW);    // set pin 5 low
+            Serial.println("temp sent");
+          }
+          if(readString.indexOf("?light") >0)//checks for off
+          {
+            Serial.println(readString.indexOf("light"));
+
+
+       
+            //digitalWrite(5, LOW);    // set pin 5 low
+            Serial.println("light sent");
+          }
+
+         
+          //clearing string for next read
+          readString="";
+
+
+//sensors.requestTemperatures(); // Send the command to get temperatures
+//Serial.print("Device 1 (index 0) = ");
+//Serial.print(sensors.getTempFByIndex(0));
+//Serial.println(" Degrees F");
+
+
+
+
+        }
+      }
+    }
+  }
+} 
