@@ -1,5 +1,5 @@
 # homebridge-CurrentAmbientLightLevel
-Creates a Light Sensor Accessory for Homekit via Homebridge.
+Creates a Light Sensor Accessory for iOS Home app/Homekit via Homebridge.
 
 CAUTION: this plugin crashes Homebridge upon launch, anytime the  "accessory": "PhotoCell", is in config.json.  It is not working yet.  Please feel free to fix it, I am a copy/paste type of programmer and my skills are meager and limited.
 
