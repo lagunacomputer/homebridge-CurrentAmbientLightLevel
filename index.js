@@ -1,4 +1,4 @@
-DEBUG=* ./bin/homebridge -D -P ../homebridge-CurrentAmbientLightLevel/
+//DEBUG=* ./bin/homebridge -D -P ../homebridge-CurrentAmbientLightLevel/
 var Service, Characteristic;
 var request = require('sync-request');
 
