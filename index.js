@@ -3,9 +3,9 @@ var Service, Characteristic;
 var request = require('sync-request');
 
 var temperatureService;
-var humidityService;
+//var humidityService;
 var url 
-var humidity = 0;
+//var humidity = 0;
 var temperature = 0;
 
 module.exports = function (homebridge) {
@@ -59,15 +59,15 @@ PhotoCell.prototype = {
           var info = JSON.parse(res.body);
 
           temperatureService.setCharacteristic(Characteristic.CurrentTemperature, info.temperature);
-          if(this.humidity !== false)
-            humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, info.humidity);
+         // if(this.humidity !== false)
+          //  humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, info.humidity);
 
           this.log(res.body);
           this.log(info);
 
           this.temperature = info.temperature;
-          if(this.humidity !== false)
-            this.humidity = info.humidity;
+        //  if(this.humidity !== false)
+        //    this.humidity = info.humidity;
 
 	  callback(null, this.temperature);
 	}
@@ -94,13 +94,13 @@ PhotoCell.prototype = {
                 .on('get', this.getState.bind(this));
         services.push(temperatureService);
         
-        if(this.humidity !== false){
-          humidityService = new Service.HumiditySensor(this.name);
-          humidityService
-                  .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-                  .on('get', this.getStateHumidity.bind(this));
-          services.push(humidityService);
-        }
+       // if(this.humidity !== false){
+      //    humidityService = new Service.HumiditySensor(this.name);
+      //    humidityService
+        //          .getCharacteristic(Characteristic.CurrentRelativeHumidity)
+        //          .on('get', this.getStateHumidity.bind(this));
+       //   services.push(humidityService);
+       // }
 
         return services;
     }
