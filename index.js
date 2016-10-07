@@ -10,7 +10,7 @@ module.exports = function (homebridge) {
 }
 
 
-function HttpTemperature(log, config) {
+function PhotoCell(log, config) {
    this.log = log;
 
    // url info
@@ -22,7 +22,7 @@ function HttpTemperature(log, config) {
    this.serial = config["serial"] || "Non-defined serial";
 }
 
-HttpTemperature.prototype = {
+PhotoCell.prototype = {
 
    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
       cons
