@@ -16,7 +16,7 @@ function Light(log, config) {
    this.url = config["url"];
    this.http_method = config["http_method"] || "GET";
    this.name = config["name"];
-   this.manufacturer = config["manufacturer"] || "@metbosch manufacturer";
+   this.manufacturer = config["manufacturer"] || "@lagunacomputer manufacturer";
    this.model = config["model"] || "Model not available";
    this.serial = config["serial"] || "Non-defined serial";
 }
