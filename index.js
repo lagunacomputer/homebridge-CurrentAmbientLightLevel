@@ -1,107 +1,82 @@
 //DEBUG=* ./bin/homebridge -D -P ../homebridge-CurrentAmbientLightLevel/
+
 var Service, Characteristic;
 var request = require('sync-request');
 
-var temperatureService;
-//var humidityService;
-var url 
-//var humidity = 0;
-var temperature = 0;
-
 module.exports = function (homebridge) {
-    Service = homebridge.hap.Service;
-    Characteristic = homebridge.hap.Characteristic;
+   Service = homebridge.hap.Service;
+   Characteristic = homebridge.hap.Characteristic;
     homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", PhotoCell);
 }
 
 
-function PhotoCell(log, config) {
-    this.log = log;
+function HttpTemperature(log, config) {
+   this.log = log;
 
-    // url info
-    this.url = config["url"];
-    this.http_method = config["http_method"] || "GET";
-    this.sendimmediately = config["sendimmediately"] || "";
-    this.name = config["name"];
-    this.manufacturer = config["manufacturer"] || "Luca Manufacturer";
-    this.model = config["model"] || "Luca Model";
-    this.serial = config["serial"] || "Luca Serial";
-  //  this.humidity = config["humidity"];
+   // url info
+   this.url = config["url"];
+   this.http_method = config["http_method"] || "GET";
+   this.name = config["name"];
+   this.manufacturer = config["manufacturer"] || "@metbosch manufacturer";
+   this.model = config["model"] || "Model not available";
+   this.serial = config["serial"] || "Non-defined serial";
 }
 
-PhotoCell.prototype = {
+HttpTemperature.prototype = {
 
-    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
-        request({
-                    url: url,
-                    body: body,
-                    method: method,
-                    rejectUnauthorized: false
-                },
-                function (error, response, body) {
-                    callback(error, response, body)
-                })
-    },
+   httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
+      cons
+      request({
+         url: url,
+         body: body,
+         method: method,
+         rejectUnauthorized: false
+      },
+      function (error, response, body) {
+         callback(error, response, body)
+      })
+   },
 
-   // getStateHumidity: function(callback){    
-//	callback(null, this.humidity);
-  //  },
+   getState: function (callback) {
+      var body;
 
-    getState: function (callback) {
-        var body;
+      var res = request(this.http_method, this.url, {});
+      if(res.statusCode > 400){
+         this.log('HTTP get state function failed');
+         callback(error);
+      } else {
+         this.log('HTTP get state function succeeded!');
+         var info = JSON.parse(res.body);
 
-	var res = request(this.http_method, this.url, {});
-	if(res.statusCode > 400){
-	  this.log('HTTP power function failed');
-	  callback(error);
-	} else {
-	  this.log('HTTP power function succeeded!');
-          var info = JSON.parse(res.body);
+         this.temperatureService.setCharacteristic(
+            Characteristic.CurrentTemperature,
+            info.temperature
+         );
+         this.log(info);
 
-          temperatureService.setCharacteristic(Characteristic.CurrentTemperature, info.temperature);
-         // if(this.humidity !== false)
-          //  humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, info.humidity);
+         this.temperature = info.temperature;
 
-          this.log(res.body);
-          this.log(info);
+         callback(null, this.temperature);
+      }
+   },
 
-          this.temperature = info.temperature;
-        //  if(this.humidity !== false)
-        //    this.humidity = info.humidity;
+   identify: function (callback) {
+      this.log("Identify requested!");
+      callback(); // success
+   },
 
-	  callback(null, this.temperature);
-	}
-    },
+   getServices: function () {
+      this.informationService = new Service.AccessoryInformation();
+      this.informationService
+      .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
+      .setCharacteristic(Characteristic.Model, this.model)
+      .setCharacteristic(Characteristic.SerialNumber, this.serial);
 
-    identify: function (callback) {
-        this.log("Identify requested!");
-        callback(); // success
-    },
+      this.temperatureService = new Service.TemperatureSensor(this.name);
+      this.temperatureService
+         .getCharacteristic(Characteristic.CurrentTemperature)
+         .on('get', this.getState.bind(this));
 
-    getServices: function () {
-        var services = [],
-            informationService = new Service.AccessoryInformation();
-            
-        informationService
-                .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
-                .setCharacteristic(Characteristic.Model, this.model)
-                .setCharacteristic(Characteristic.SerialNumber, this.serial);
-        services.push(informationService);
-
-        temperatureService = new Service.TemperatureSensor(this.name);
-        temperatureService
-                .getCharacteristic(Characteristic.CurrentTemperature)
-                .on('get', this.getState.bind(this));
-        services.push(temperatureService);
-        
-       // if(this.humidity !== false){
-      //    humidityService = new Service.HumiditySensor(this.name);
-      //    humidityService
-        //          .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-        //          .on('get', this.getStateHumidity.bind(this));
-       //   services.push(humidityService);
-       // }
-
-        return services;
-    }
+      return [this.informationService, this.temperatureService];
+   }
 };
