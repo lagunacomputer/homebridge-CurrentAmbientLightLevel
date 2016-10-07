@@ -1,16 +1,15 @@
 //DEBUG=* ./bin/homebridge -D -P ../homebridge-CurrentAmbientLightLevel/
-
 var Service, Characteristic;
 var request = require('sync-request');
 
 module.exports = function (homebridge) {
    Service = homebridge.hap.Service;
    Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "PhotoCell", PhotoCell);
+   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "Light", HttpTemperature);
 }
 
 
-function PhotoCell(log, config) {
+function Light(log, config) {
    this.log = log;
 
    // url info
@@ -22,7 +21,7 @@ function PhotoCell(log, config) {
    this.serial = config["serial"] || "Non-defined serial";
 }
 
-PhotoCell.prototype = {
+HttpTemperature.prototype = {
 
    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
       cons
