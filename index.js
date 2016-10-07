@@ -26,7 +26,7 @@ function PhotoCell(log, config) {
     this.manufacturer = config["manufacturer"] || "Luca Manufacturer";
     this.model = config["model"] || "Luca Model";
     this.serial = config["serial"] || "Luca Serial";
-    this.humidity = config["humidity"];
+  //  this.humidity = config["humidity"];
 }
 
 PhotoCell.prototype = {
@@ -43,9 +43,9 @@ PhotoCell.prototype = {
                 })
     },
 
-    getStateHumidity: function(callback){    
-	callback(null, this.humidity);
-    },
+   // getStateHumidity: function(callback){    
+//	callback(null, this.humidity);
+  //  },
 
     getState: function (callback) {
         var body;
