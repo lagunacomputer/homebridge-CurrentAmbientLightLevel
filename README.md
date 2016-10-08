@@ -27,7 +27,7 @@ ie: "when its dark, turn on the light"  etc...
 
         "accessories": [
         {
-            "accessory": "PhotoCell",
+            "accessory": "Light",
             "name": "Light Sensor",
             "url": "http://192.168.1.210/light",
             "sendimmediately": "",
