@@ -49,7 +49,7 @@ HttpTemperature.prototype = {
 
          this.temperatureService.setCharacteristic(
             Characteristic.CurrentTemperature,
-            info.temperature
+            info.lightval
          );
          this.log(info);
 
