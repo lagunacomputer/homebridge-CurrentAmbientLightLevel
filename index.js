@@ -48,7 +48,7 @@ HttpTemperature.prototype = {
          var info = JSON.parse(res.body);
 
          this.lightService.setCharacteristic(
-            Characteristic.CurrentAmbientLightLevel,
+            Characteristic.CurrentTemperature,
             info.temperature
          );
          this.log(info);
@@ -71,9 +71,9 @@ HttpTemperature.prototype = {
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serial);
 
-      this.temperatureService = new Service.LightSensor(this.name);
+      this.temperatureService = new Service.TemperatureSensor(this.name);
       this.temperatureService
-         .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+         .getCharacteristic(Characteristic.CurrentTemperature)
          .on('get', this.getState.bind(this));
 
       return [this.informationService, this.temperatureService];
