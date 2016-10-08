@@ -5,23 +5,23 @@ var request = require('sync-request');
 module.exports = function (homebridge) {
    Service = homebridge.hap.Service;
    Characteristic = homebridge.hap.Characteristic;
-   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "Light1", Light);
+   homebridge.registerAccessory("homebridge-http-temperature", "Light", HttpTemperature);
 }
 
 
-function Light1(log, config) {
+function HttpTemperature(log, config) {
    this.log = log;
 
    // url info
    this.url = config["url"];
    this.http_method = config["http_method"] || "GET";
    this.name = config["name"];
-   this.manufacturer = config["manufacturer"] || "@lagunacomputer manufacturer";
+   this.manufacturer = config["manufacturer"] || "@metbosch manufacturer";
    this.model = config["model"] || "Model not available";
    this.serial = config["serial"] || "Non-defined serial";
 }
 
-Light.prototype = {
+HttpTemperature.prototype = {
 
    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
       cons
