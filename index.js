@@ -71,11 +71,11 @@ HttpTemperature.prototype = {
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serial);
 
-      this.lghtService = new Service.LightSensor(this.name);
-      this.lightService
+
+      this.temperatureService
          .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
          .on('get', this.getState.bind(this));
 
-      return [this.informationService, this.lightService];
+      return [this.informationService, this.temperatureService];
    }
 };
