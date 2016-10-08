@@ -21,7 +21,7 @@ function HttpLight(log, config) {
    this.serial = config["serial"] || "LagunaBeachComputer.com";
 }
 
-HttpTemperature.prototype = {
+HttpLight.prototype = {
 
    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
       cons
