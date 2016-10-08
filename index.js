@@ -55,7 +55,7 @@ HttpTemperature.prototype = {
 
          this.lightval = info.lightval;
 
-         callback(null, this.temperature);
+         callback(null, this.lightval);
       }
    },
 
