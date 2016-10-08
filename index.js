@@ -47,7 +47,7 @@ HttpTemperature.prototype = {
          this.log('HTTP get state function succeeded!');
          var info = JSON.parse(res.body);
 
-         this.lightService.setCharacteristic(
+         this.temperatureService.setCharacteristic(
             Characteristic.CurrentTemperature,
             info.temperature
          );
