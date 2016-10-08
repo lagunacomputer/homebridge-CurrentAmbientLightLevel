@@ -1,5 +1,6 @@
 
 
+
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -56,31 +57,7 @@ sensors.begin();
 
 void loop(){
 
-
-
-photocellReading = analogRead(photocellPin);  
- 
-  Serial.print("Analog reading = ");
-  Serial.print(photocellReading);     // the raw analog reading
- 
-  // We'll have a few threshholds, qualitatively determined
-  if (photocellReading < 10) {
-    Serial.println(" - Dark");
-  } else if (photocellReading < 200) {
-    Serial.println(" - Dim");
-  } else if (photocellReading < 500) {
-    Serial.println(" - Light");
-  } else if (photocellReading < 800) {
-    Serial.println(" - Bright");
-  } else {
-    Serial.println(" - Very bright");
-  }
-          
-
-
-
-
-
+readPhotocell();
 
 
 
@@ -137,19 +114,19 @@ float temperatureIndoor;
           client.println();
           sensors.requestTemperatures(); // Send the command to get temperatures
           temperatureIndoor = (sensors.getTempCByIndex(0));
-          temperatureOutdoor = (sensors.getTempFByIndex(0));
+          //temperatureOutdoor = (sensors.getTempFByIndex(0));
  
           client.print("{");
           client.print("\"temperature\":");
           client.print(temperatureIndoor);
           client.print(",");
-          client.print("\"humidity\":");
-          client.print(temperatureOutdoor);
+          //client.print("\"humidity\":");
+          //client.print(temperatureOutdoor);
           
           //client.print("}");
           //client.println();
        
-          client.print(",");
+          //client.print(",");
           //client.print("{");
           client.print("\"lightval\":");
           client.print(photocellReading);
@@ -183,7 +160,7 @@ float temperatureIndoor;
           {
             Serial.println(readString.indexOf("temp"));
 
-
+            temperatureIndoor = (sensors.getTempCByIndex(0));
        
             //digitalWrite(5, LOW);    // set pin 5 low
             Serial.println("temp sent");
@@ -211,8 +188,37 @@ float temperatureIndoor;
 
 
 
-        }
-      }
-    }
+        }                     ///c=n
+      }                //client available
+    }             //client connected
+  }         //if client
+}      //loop
+
+
+void readPhotocell(){
+
+photocellReading = analogRead(photocellPin);  
+ 
+  Serial.print("Analog reading = ");
+  Serial.print(photocellReading);     // the raw analog reading
+
+  // We'll have a few threshholds, qualitatively determined
+  if (photocellReading < 10) {
+    Serial.println(" - Dark");
+  } else if (photocellReading < 200) {
+    Serial.println(" - Dim");
+  } else if (photocellReading < 500) {
+    Serial.println(" - Light");
+  } else if (photocellReading < 800) {
+    Serial.println(" - Bright");
+  } else {
+    Serial.println(" - Very bright");
   }
-} 
+          
+}
+
+
+
+
+
+
