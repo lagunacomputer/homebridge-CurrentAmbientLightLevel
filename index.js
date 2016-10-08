@@ -5,11 +5,11 @@ var request = require('sync-request');
 module.exports = function (homebridge) {
    Service = homebridge.hap.Service;
    Characteristic = homebridge.hap.Characteristic;
-   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "Light", HttpTemperature);
+   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "HttpTemperature", Light);
 }
 
 
-function Light(log, config) {
+function HttpTemperature(log, config) {
    this.log = log;
 
    // url info
@@ -21,7 +21,7 @@ function Light(log, config) {
    this.serial = config["serial"] || "Non-defined serial";
 }
 
-HttpTemperature.prototype = {
+Light.prototype = {
 
    httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
       cons
