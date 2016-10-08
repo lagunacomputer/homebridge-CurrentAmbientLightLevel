@@ -1,12 +1,12 @@
 {
-  "name": "homebridge-http-temperature",
+  "name": "homebridge-CurrentAmbientLightLevel",
   "version": "0.0.1",
   "description": "https plugin for homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin",
     "http",
-    "temperature sensor"
+    "light sensor"
   ],
   "engines": {
     "node": ">=0.12.0",
