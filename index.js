@@ -5,11 +5,11 @@ var request = require('sync-request');
 module.exports = function (homebridge) {
    Service = homebridge.hap.Service;
    Characteristic = homebridge.hap.Characteristic;
-   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "HttpTemperature", Light);
+   homebridge.registerAccessory("homebridge-CurrentAmbientLightLevel", "Light1", Light);
 }
 
 
-function HttpTemperature(log, config) {
+function Light1(log, config) {
    this.log = log;
 
    // url info
