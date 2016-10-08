@@ -71,7 +71,7 @@ HttpTemperature.prototype = {
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serial);
 
-      this.temperatureService = new Service.TemperatureSensor(this.name);
+      this.temperatureService = new Service.LightSensor(this.name);
       this.temperatureService
          .getCharacteristic(Characteristic.CurrentTemperature)
          .on('get', this.getState.bind(this));
