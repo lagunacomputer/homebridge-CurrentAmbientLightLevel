@@ -47,8 +47,8 @@ HttpTemperature.prototype = {
          this.log('HTTP get state function succeeded!');
          var info = JSON.parse(res.body);
 
-         this.temperatureService.setCharacteristic(
-            Characteristic.CurrentTemperature,
+         this.lightService.setCharacteristic(
+            Characteristic.CurrentAmbientLightLevel,
             info.temperature
          );
          this.log(info);
@@ -71,11 +71,11 @@ HttpTemperature.prototype = {
       .setCharacteristic(Characteristic.Model, this.model)
       .setCharacteristic(Characteristic.SerialNumber, this.serial);
 
-      this.temperatureService = new Service.TemperatureSensor(this.name);
-      this.temperatureService
-         .getCharacteristic(Characteristic.CurrentTemperature)
+      this.lghtService = new Service.LightSensor(this.name);
+      this.lightService
+         .getCharacteristic(Characteristic.CurrentAmbientLightLevel)
          .on('get', this.getState.bind(this));
 
-      return [this.informationService, this.temperatureService];
+      return [this.informationService, this.lightService];
    }
 };
