@@ -16,9 +16,9 @@ function HttpTemperature(log, config) {
    this.url = config["url"];
    this.http_method = config["http_method"] || "GET";
    this.name = config["name"];
-   this.manufacturer = config["manufacturer"] || "@metbosch manufacturer";
-   this.model = config["model"] || "Model not available";
-   this.serial = config["serial"] || "Non-defined serial";
+   this.manufacturer = config["manufacturer"] || "@lagunacomputer";
+   this.model = config["model"] || "10k Photocell";
+   this.serial = config["serial"] || "LagunaBeachComputer.com";
 }
 
 HttpTemperature.prototype = {
